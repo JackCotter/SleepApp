@@ -1,13 +1,21 @@
 import react from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Image, SafeAreaView, TouchableWithoutFeedback, Alert, Button } from 'react-native';
-
+import { Dimensions, StyleSheet, Text, View, Image, SafeAreaView, TouchableWithoutFeedback, Alert, Button, Platform } from 'react-native';
+import { useDeviceOrientation, useDimensions } from '@react-native-community/hooks';
 //View mapped to platform dependant view
 export default function App() {
+  const {landscape, portait} = useDeviceOrientation()
   const handlePress = () => console.log('text pressed')
   let x = 1;
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, containerStyle]}>
+      <View style={{
+        backgroundColor: 'dodgerblue',
+        width: '100%',
+        height: landscape ? '100%' : '30%',
+      }}>
+
+      </View>
       <Text numberOfLines={1} onPress = {handlePress}>Hello World</Text>
       <TouchableWithoutFeedback onPress={()=>console.log('image tapped')}>
         <Image 
@@ -19,20 +27,16 @@ export default function App() {
         }}>
         </Image>
       </TouchableWithoutFeedback>
-      <Button colour= 'orange' title='Click Me' onPress={()=> Alert.alert('My title', 'button tapped', [
-        {text:'yes', onPress: ()=>console.log('yes')},
-        {text:'no', onPress: () =>console.log('no')}
-      ])}></Button>
+      <Button colour= 'orange' title='Click Me' onPress={()=> Alert.prompt('title','message', text => console.log(text))}></Button>
       <StatusBar style="auto" />
     </SafeAreaView>
   );
 }
-
+const containerStyle = { backgroundColor: 'orange'};
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'fff',
-    justifyContent: 'center',
-    alignItems: 'center',
+    paddingTop: Platform.OS === "android" ? StatusBar.height : 0
   },
 });
